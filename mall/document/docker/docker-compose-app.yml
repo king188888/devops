@@ -10,6 +10,7 @@ services:
       - /etc/localtime:/etc/localtime
     environment:
       - 'TZ="Asia/Shanghai"'
+      - 'SPRING_PROFILES_ACTIVE=dev'
     networks:
       - docker_db-net #可以用db这个域名访问mysql服务
   mall-search:
