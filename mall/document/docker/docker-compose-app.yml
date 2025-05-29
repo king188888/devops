@@ -38,6 +38,16 @@ services:
     networks:
       - docker_db-net #可以用redis、mango这个域名访问redis服务
       - docker_middleware-net #可以用rabbit这个域名访问rabbitmq服务
+
+  busybox:
+    image: busybox:latest
+    command: sh -c "while true; do sleep 3600; done"
+    networks:
+      - docker_db-net
+      - docker_middleware-net
+      - docker_logging-net
+      - docker_frontend-net
+
 networks:
   docker_db-net:
     external: true
