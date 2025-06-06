@@ -10,9 +10,9 @@ services:
       - /etc/localtime:/etc/localtime
     environment:
       - 'TZ="Asia/Shanghai"'
-      - 'SPRING_PROFILES_ACTIVE=dev'
     networks:
       - docker_db-net #可以用db这个域名访问mysql服务
+      - backend-net
   mall-search:
     image: mall/mall-search:1.0-SNAPSHOT
     container_name: mall-search
@@ -26,6 +26,7 @@ services:
     networks:
       - docker_logging-net #可以用es这个域名访问elasticsearch服务
       - docker_db-net #可以用db这个域名访问mysql服务
+      - backend-net
   mall-portal:
     image: mall/mall-portal:1.0-SNAPSHOT
     container_name: mall-portal
@@ -39,15 +40,17 @@ services:
     networks:
       - docker_db-net #可以用redis、mango这个域名访问redis服务
       - docker_middleware-net #可以用rabbit这个域名访问rabbitmq服务
+      - backend-net
 
-  busybox:
-    image: busybox:latest
-    command: sh -c "while true; do sleep 3600; done"
+  mall-admin-web:
+    image: mall-admin-web:v3
+    container_name: mall-admin-web
+    ports:
+      - 80:80
+    volumes:
+      - /mydata/nginx/conf.d:/etc/nginx/conf.d
     networks:
-      - docker_db-net
-      - docker_middleware-net
-      - docker_logging-net
-      - docker_frontend-net
+      - backend-net
 
 networks:
   docker_db-net:
@@ -58,3 +61,5 @@ networks:
     external: true
   docker_frontend-net:
     external: true
+  backend-net:
+    driver: bridge

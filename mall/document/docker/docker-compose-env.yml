@@ -36,7 +36,7 @@ services:
     volumes:
       - /mydata/redis/data:/data
     networks:
-      - middleware-net
+      - db-net
     ports:
       - "6379:6379"  # 如无外部访问需求可注释掉
 
@@ -50,6 +50,9 @@ services:
     ports:
       - "5672:5672"
       - "15672:15672"  # 管理界面
+    environment:
+      - RABBITMQ_DEFAULT_USER=mall
+      - RABBITMQ_DEFAULT_PASS=mall
 
   minio:
     image: minio/minio
@@ -110,17 +113,17 @@ services:
       - "5601:5601"
 
   # ==================== 网关服务 ====================
-  nginx:
-    image: nginx:1.22
-    container_name: nginx
-    volumes:
-      - /mydata/nginx:/etc/nginx
-      - /mydata/nginx/html:/usr/share/nginx/html
-      - /mydata/nginx/logs:/var/log/nginx
-    networks:
-      - frontend-net
-    ports:
-      - "80:80"
+#  nginx:
+#    image: nginx:1.22
+#    container_name: nginx
+#    volumes:
+#      - /mydata/nginx:/etc/nginx
+#      - /mydata/nginx/html:/usr/share/nginx/html
+#      - /mydata/nginx/logs:/var/log/nginx
+#    networks:
+#      - frontend-net
+#    ports:
+#      - "80:80"
 
 # ==================== 网络定义 ====================
 networks:
